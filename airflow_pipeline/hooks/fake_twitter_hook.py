@@ -7,7 +7,7 @@ import requests
 
 class FakeTwitterHook(HttpHook):
 
-    def __init__(self, start_time: datetime, end_time: datetime, query: str, conn_id = None) -> None:
+    def __init__(self, start_time: str, end_time: str, query: str, conn_id = None) -> None:
         self.conn_id = conn_id or 'fake_twitter_default'
         super().__init__(http_conn_id = self.conn_id)
 
@@ -21,12 +21,9 @@ class FakeTwitterHook(HttpHook):
         return self.__paginate(session, url)
 
     def __create_url(self) -> str:
-        DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.00Z'
-        start_time = self.start_time.strftime(DATETIME_FORMAT)
-        end_time = self.end_time.strftime(DATETIME_FORMAT)
         tweet_fields = 'tweet.fields=author_id,conversation_id,created_at,id,in_reply_to_user_id,public_metrics,lang,text'
         user_fields = 'expansions=author_id&user.fields=id,name,username,created_at'
-        return f'{self.base_url}/2/tweets/search/recent?query={self.query}&{tweet_fields}&{user_fields}&start_time={start_time}&end_time={end_time}'
+        return f'{self.base_url}/2/tweets/search/recent?query={self.query}&{tweet_fields}&{user_fields}&start_time={self.start_time}&end_time={self.end_time}'
     
     def __connect_to_endpoint(self, session, url):
         request = requests.Request('GET', url)

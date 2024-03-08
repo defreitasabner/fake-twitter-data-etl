@@ -12,7 +12,10 @@ from hooks.fake_twitter_hook import FakeTwitterHook
 
 class FakeTwitterOperator(BaseOperator):
 
-    def __init__(self, filepath:str, start_time: datetime, end_time: datetime, query: str, **kwargs):
+    # Define the fields of this class that could be accessed by Jinja template
+    template_fields = ['query', 'filepath', 'start_time', 'end_time']
+
+    def __init__(self, filepath:str, start_time: str, end_time: str, query: str, **kwargs):
         super().__init__(**kwargs)
         self.filepath = filepath
         self.start_time = start_time
